@@ -44,7 +44,7 @@
                 <fieldset>
                     <legend>編輯公告</legend>
                     <br><br>
-                        <textarea id="te" style=" width: 100%; height: 200px; resize:none;">140.116.82.34/visit/visitRegister.html</textarea>
+                        <textarea id="te" style=" width: 100%; height: 200px; resize:none;">敬邀學長們推薦 7/4 高雄拜訪場次： 140.116.82.34/visit/visitRegister.html</textarea>
                         <br><br>
                         <button onclick="send()">傳送</button>
                 </fieldset>
