@@ -23,16 +23,19 @@
                 <fieldset>
                     <legend>編輯公告</legend>
                     <br><br>
-                    <textarea id="te" style=" width: 100%; height: 200px; resize:none;"></textarea>
-                    <br><br>
-                    <button onclick="send()">傳送</button>
+                    <form action="Announce.php" method="get">
+                        <textarea id="te" name="te" style=" width: 100%; height: 200px; resize:none;">140.116.82.34/visit/visitRegister.html</textarea>
+                        <br><br>
+                        <input type="submit" value="傳送">
+                        <!-- <button onclick="send()">傳送</button> -->
+                    </form>
                 </fieldset>
             </div>
         </center>
      
 
     <script>
-        
+        /*
         //Create a new Client object with your broker's hostname, port and your own clientId
         client = new Paho.MQTT.Client("140.116.82.34", 9001, "myclientid_" + parseInt(Math.random() * 100, 10));
         
@@ -98,7 +101,7 @@
             client.send(msg);
             // alert("ok");
         }
-        
+        */
 
        
 
