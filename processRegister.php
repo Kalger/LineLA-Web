@@ -4,14 +4,16 @@
     mysqli_set_charset($conn, 'utf8');
 
     $visitRegisterID = time();
-    $registrarID = $_POST['memberID'];
+    $registrarID = $_POST['registrarID'];
+    $registrarName = $_POST['registrarName'];
     $intervieweeName = $_POST['intervieweeName'];
     $time = $_POST['time'];
+    
 
 
 
-    $sql = "INSERT INTO `visitRegister` (`visitRegisterID`, `registrarID`, `intervieweeName`, `time`) 
-            VALUES ( '$visitRegisterID', '$registrarID', '$intervieweeName', '$time' );";
+    $sql = "INSERT INTO `visitRegister` (`visitRegisterID`, `registrarID`, `registrarName`, `intervieweeName`, `time`) 
+            VALUES ( '$visitRegisterID', '$registrarID', '$registrarName', '$intervieweeName', '$time' );";
 
 
     $result = mysqli_query($conn,$sql);
@@ -54,7 +56,7 @@
                 
                     //Create a new Client object with your broker's hostname, port and your own clientId
                     
-                    // var registerName, invitedName, memberID, time;
+                    // var registerName, invitedName, registrarID, time;
                     // var replyMsg;
                         
 
@@ -78,11 +80,10 @@
                         }
                     };
 
-                    memberID = "<? echo $_POST['memberID'] ?>" ;
+                    registrarID = "<? echo $registrarID ?>" ;
                     registerName = "<? echo $_POST['registrarName'] ?>" ;
 
 
-                    // console.log("memberID : " + memberID);
 
                     replyMsg = registerName + "學長您好, 恭喜您成功登記拜訪";
                     client = new Paho.MQTT.Client("140.116.82.34", 9001, "myclientid_" + parseInt(Math.random() * 100, 10));
@@ -100,12 +101,12 @@
                         console.log("onConnect");
 
                         // subscribe
-                        client.subscribe("recommend/" + memberID);
+                        client.subscribe("recommend/" + registrarID);
 
                         // publish
                         // msg = new Paho.MQTT.Message("ID;name;aaa");
                         msg = new Paho.MQTT.Message("ID;name;" + replyMsg);
-                        msg.destinationName = "recommend/" + memberID;
+                        msg.destinationName = "recommend/" + registrarID;
                         client.send(msg);
                         
                     }
