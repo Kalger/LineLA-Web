@@ -26,6 +26,18 @@
                 
                 background-color: lightskyblue;
             }
+            .column {
+                float: left;
+                width: 30%;
+                padding: 5px;
+            }
+
+            /* Clear floats after image containers */
+            .row::after {
+                content: "";
+                clear: both;
+                display: table;
+            }
         </style>
         
         <title>拜訪場次安排</title>
@@ -36,7 +48,7 @@
 
         <center>
             <div style="text-align:center; display: inline-block;">
-            <h1 id="title" >拜訪場次安排</h1>
+                <h1 id="title" >拜訪場次安排</h1>
             </div>
             <br>
         </center>
@@ -146,6 +158,111 @@
             }
                 ?>
         </div>
+        
+        <br><br>
+        <hr size=5>
+        <br><br>
+        <!-- 訊息發送 -->
+       
+        <div>
+            <div style= "font-size: 150%; display: inline-block;">
+                    發送訊息給護持學長
+            </div>
+            <div class="row">
+                <div class="column">
+                    <p>
+                        <b>學員ID</b><br />
+                        <input name="supportID" id="supportID" placeholder="學員ID" required />
+                    </p><br />
+                </div>
+                <div class="column">
+                    <p>
+                        <b>學員姓名</b><br />
+                        <input name="supportName" id="supportName" placeholder="姓名" required />
+                    </p><br />
+                </div>
+                <div class="column">
+                    <p>
+                        <br />
+                        <button onclick="inviteSupport()">邀請護持</button>
+                    </p><br />
+                </div>
+            </div>
+        </div>
+        
+
+        <!-- mqtt -->
+        <script>
+                
+                var options = {
+                    
+                    //connection attempt timeout in seconds
+                    timeout: 3,
+
+                    userName: "LineLA",
+                    password: "LineLA",
+
+                    //Gets Called if the connection has successfully been established
+                    onSuccess: function () {
+                        console.log("ConnectSuccess");
+                        onConnect();
+                    },
+                
+                    //Gets Called if the connection could not be established
+                    onFailure: function (message) {
+                        console.log("Connection failed: " + message.errorMessage);
+                    }
+                };
+
+
+                
+                client = new Paho.MQTT.Client("140.116.82.34", 9001, "myclientid_" + parseInt(Math.random() * 100, 10));
+                    
+                // set callback handlers
+                client.onConnectionLost = onConnectionLost;
+                client.onMessageArrived = onMessageArrived;
+
+                client.connect(options);
+                // client.connect(options);
+
+
+                function inviteSupport(){
+
+                    supportID = document.getElementById("supportID").value ;
+                    supportName = document.getElementById("supportName").value;
+
+                    Msg = supportName + "學長您好, 我們誠摯邀請您參與本期拜訪活動，請您於下方連結填寫與會意願及時段";
+
+                    // console.log("supportID" + supportID);
+                    // console.log("supportName" + supportName);
+
+
+                     // publish
+                    msg = new Paho.MQTT.Message("ID;name;" + Msg);
+                    msg.destinationName = "support/" + supportID;
+                    client.send(msg);
+                }
+                // called when the client connects
+                function onConnect() {
+
+                    console.log("onConnect");
+
+                    // subscribe
+                    client.subscribe("support/+"); 
+                }
+
+                // called when the client loses its connection
+                function onConnectionLost(responseObject) {
+                    if (responseObject.errorCode !== 0) {
+                        console.log("onConnectionLost:"+responseObject.errorMessage);
+                    }
+                }
+
+                // called when a message arrives
+                function onMessageArrived(message) {
+                    console.log("onMessageArrived:"+message.payloadString);
+                }
+            </script>
     </body>
 </html>
     
