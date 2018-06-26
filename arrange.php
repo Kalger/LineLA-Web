@@ -50,6 +50,7 @@
         <title>拜訪場次安排</title>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     </head>
     <body>
 
@@ -364,8 +365,6 @@
                 }
                 
                 function sendto(ID,topic,message){
-
-                    
                     if(topic=="support"){
                         Msg = message + "http://140.116.82.34/visit/sessionRegister.php";
                         msg = new Paho.MQTT.Message("ID;instruction;"+Msg);
@@ -373,10 +372,25 @@
                         client.send(msg);
                     }
                     else{
-                        Msg = message + "http://140.116.82.34/visit/visitRegister.html";
-                        msg = new Paho.MQTT.Message("ID;instruction;"+Msg);
-                        msg.destinationName = "recommend/" + ID;
-                        client.send(msg);
+                        $.ajax({
+                            url: 'modifyDB.php',
+                            cache: false,
+                            dataType: 'html',
+                            type:'GET',
+                            data: { id: ID},
+                            error: function(xhr) {
+                                Msg = "不好意思，資料庫連線失敗，請在嘗試一次。";
+                                msg = new Paho.MQTT.Message("ID;annouArrange;"+Msg);
+                                msg.destinationName = "recommend/" + ID;
+                                client.send(msg);
+                            },
+                            success: function(response) {
+                                Msg = message + "http://140.116.82.34/visit/visitRegister.html";
+                                msg = new Paho.MQTT.Message("ID;instruction;"+Msg);
+                                msg.destinationName = "recommend/" + ID;
+                                client.send(msg);
+                            }
+                        });
                     }
                 }
             </script>

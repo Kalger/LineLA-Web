@@ -2,7 +2,7 @@
     $conn = mysqli_connect('localhost','root','LineLA','LineLA');
     mysqli_set_charset($conn, 'utf8');
 
-    $sql = "SELECT registrarID, registrarName, intervieweeName, time FROM visitRegister";
+    $sql = "SELECT time FROM visitRegister GROUP BY time";
     $resultRegister = mysqli_query($conn,$sql);
     $numRegister = mysqli_num_rows($resultRegister);
 
