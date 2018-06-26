@@ -68,7 +68,7 @@
         function onConnect() {
             // Once a connection has been made, make a subscription and send a message.
             console.log("onConnect");
-            client.subscribe("recommend/100672000367");
+            client.subscribe("recommend/+");
         }
 
         // called when the client loses its connection
@@ -114,7 +114,7 @@
                 // i = "<? echo $i?>"
                 memberID = results[i];
                 // msg = new Paho.MQTT.Message("Hello;ddd;"+tt);
-                msg = new Paho.MQTT.Message("Hello;ddd;"+document.getElementById("te").value);
+                msg = new Paho.MQTT.Message("ID;instruction;"+document.getElementById("te").value);
                 //msg.destinationName = "recommend/#";
                 msg.destinationName = "recommend/"+memberID;
                 client.send(msg);

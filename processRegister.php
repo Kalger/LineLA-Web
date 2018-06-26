@@ -4,17 +4,23 @@
     mysqli_set_charset($conn, 'utf8');
 
     $visitRegisterID = time();
-    $registrarID = $_POST['registrarID'];
     $registrarName = $_POST['registrarName'];
     $intervieweeName = $_POST['intervieweeName'];
     $time = $_POST['time'];
     
-
-
+    $sql = "SELECT memberID FROM members WHERE name='$registrarName'";
+    $result = mysqli_query($conn,$sql);
+    if(mysqli_num_rows($result) > 0){
+        $row = mysqli_fetch_assoc($result);
+        $registrarID = $row['memberID'];
+    }else {
+        echo "請輸入正確的會員姓名";
+    }   
+    
+    // mysqli_close($conn);
 
     $sql = "INSERT INTO `visitRegister` (`visitRegisterID`, `registrarID`, `registrarName`, `intervieweeName`, `time`) 
             VALUES ( '$visitRegisterID', '$registrarID', '$registrarName', '$intervieweeName', '$time' );";
-
 
     $result = mysqli_query($conn,$sql);
 
@@ -105,7 +111,7 @@
 
                         // publish
                         // msg = new Paho.MQTT.Message("ID;name;aaa");
-                        msg = new Paho.MQTT.Message("ID;name;" + replyMsg);
+                        msg = new Paho.MQTT.Message("ID;instruction;" + replyMsg);
                         msg.destinationName = "recommend/" + registrarID;
                         client.send(msg);
                         
@@ -140,5 +146,7 @@
     }else {
         echo "登記好友失敗,請再試一次";
     }   
+    
+    mysqli_close($conn);
 
 ?>
